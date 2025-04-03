@@ -27,9 +27,9 @@ def get_crypto_data(symbols):
         "DOGE": "DOGE-USD",
         "LTC": "LTC-USD",
         "AVAX": "AVAX-USD",
-        "TON": "TONCOIN-USD",  # Правильный тикер для TON
-        "SUI": "SUI-USD",      # Правильный тикер для SUI
-        "ARB": "ARB-USD"       # Правильный тикер для Arbitrum
+        "TON": "TON11419-USD",  # Правильный тикер для TON
+        "SUI": "SUI20947-USD",      # Правильный тикер для SUI
+        "ARB": "ARB11841-USD"       # Правильный тикер для Arbitrum
     }
     
     data = {}
