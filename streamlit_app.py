@@ -13,30 +13,49 @@ DATA_DIR = "user_data"
 if not os.path.exists(DATA_DIR):
     os.makedirs(DATA_DIR)
 
-import time
-
 def get_crypto_data(symbols):
     """Gets current cryptocurrency prices using yfinance."""
-    crypto_tickers = [f"{symbol}-USD" for symbol in symbols]
+    # Корректные тикеры для основных криптовалют
+    crypto_mapping = {
+        "BTC": "BTC-USD",
+        "ETH": "ETH-USD",
+        "BNB": "BNB-USD",
+        "ADA": "ADA-USD",
+        "SOL": "SOL-USD",
+        "XRP": "XRP-USD",
+        "DOT": "DOT-USD",
+        "DOGE": "DOGE-USD",
+        "LTC": "LTC-USD",
+        "AVAX": "AVAX-USD",
+        "TON": "TONCOIN-USD",  # Правильный тикер для TON
+        "SUI": "SUI-USD",      # Правильный тикер для SUI
+        "ARB": "ARB-USD"       # Правильный тикер для Arbitrum
+    }
+    
     data = {}
     
-    for ticker in crypto_tickers:
+    for symbol in symbols:
         try:
-            crypto = yf.Ticker(ticker)
-            # Get the historical data
-            hist = crypto.history(period="1d")
-            # Check if there's data in the DataFrame
+            # Получаем правильный тикер или используем формат по умолчанию
+            ticker_symbol = crypto_mapping.get(symbol, f"{symbol}-USD")
+            
+            # Используем yfinance для получения данных
+            crypto = yf.Ticker(ticker_symbol)
+            
+            # Увеличиваем период для большей вероятности получения данных
+            hist = crypto.history(period="2d")
+            
+            # Проверяем, есть ли данные в DataFrame
             if not hist.empty:
                 price = hist.iloc[-1]['Close']
-                # Extract symbol without '-USD'
-                symbol = ticker.split('-')[0]
                 data[symbol] = price
             else:
-                st.warning(f"No data available for {ticker}")
-            # Add a small delay between requests
-            time.sleep(0.5)
+                st.warning(f"No data available for {ticker_symbol}")
+            
+            # Увеличиваем задержку между запросами
+            time.sleep(1)
         except Exception as e:
-            st.warning(f"Failed to get data for {ticker}: {e}")
+            st.warning(f"Failed to get data for {symbol}: {e}")
     
     return data
 
@@ -190,8 +209,8 @@ def show_portfolio_page():
         logout_user()
         st.rerun()
     
-    # Get list of all available cryptocurrencies
-    default_coins = ["BTC", "ETH", "BNB", "ADA", "SOL", "XRP", "DOT", "DOGE", "LTC", "TON11419", "AVAX", "SUI20947", "ARB11841"]
+    # Обновленный список криптовалют с правильными тикерами
+    default_coins = ["BTC", "ETH", "BNB", "ADA", "SOL", "XRP", "DOT", "DOGE", "LTC", "TON", "AVAX", "SUI", "ARB"]
     
     # Get current prices
     crypto_prices = get_crypto_data(default_coins)
