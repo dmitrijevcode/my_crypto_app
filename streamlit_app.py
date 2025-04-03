@@ -181,7 +181,7 @@ def show_portfolio_page():
         st.rerun()
     
     # Get list of all available cryptocurrencies
-    default_coins = ["BTC", "ETH", "BNB", "ADA", "SOL", "XRP", "DOT", "DOGE", "MATIC", "LTC"]
+    default_coins = ["BTC", "ETH", "BNB", "ADA", "SOL", "XRP", "DOT", "DOGE", "LTC", "TON11419", "AVAX", "SUI20947", "ARB11841"]
     
     # Get current prices
     crypto_prices = get_crypto_data(default_coins)
