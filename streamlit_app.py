@@ -6,11 +6,14 @@ import json
 import os
 from datetime import datetime
 import hashlib
+import time
 
 # Create directory for storing user data if it doesn't exist
 DATA_DIR = "user_data"
 if not os.path.exists(DATA_DIR):
     os.makedirs(DATA_DIR)
+
+import time
 
 def get_crypto_data(symbols):
     """Gets current cryptocurrency prices using yfinance."""
@@ -20,11 +23,18 @@ def get_crypto_data(symbols):
     for ticker in crypto_tickers:
         try:
             crypto = yf.Ticker(ticker)
-            # Get the latest available price
-            price = crypto.history(period="1d").iloc[-1]['Close']
-            # Extract symbol without '-USD'
-            symbol = ticker.split('-')[0]
-            data[symbol] = price
+            # Get the historical data
+            hist = crypto.history(period="1d")
+            # Check if there's data in the DataFrame
+            if not hist.empty:
+                price = hist.iloc[-1]['Close']
+                # Extract symbol without '-USD'
+                symbol = ticker.split('-')[0]
+                data[symbol] = price
+            else:
+                st.warning(f"No data available for {ticker}")
+            # Add a small delay between requests
+            time.sleep(0.5)
         except Exception as e:
             st.warning(f"Failed to get data for {ticker}: {e}")
     
